@@ -1,5 +1,9 @@
 # Raigeki
 
+<p align="center">
+  <img src="https://static.wikia.nocookie.net/yugioh/images/1/11/Raigeki-TF04-JP-VG.png/revision/latest?cb=20161225202122" alt="Raigeki" width="300"/>
+</p>
+
 **Raigeki** is a shellcode loader written in **Rust**, implementing a custom memory writing technique using **Asynchronous Procedure Calls (APCs)** with `NtQueueApcThread` and `RtlFillMemory`.
 
 This project is a **Rust reimplementation** of the technique originally demonstrated in C by [x86matthew](https://www.x86matthew.com/view_post?id=writeprocessmemory_apc).  
