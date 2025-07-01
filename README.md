@@ -7,7 +7,7 @@ Full credit for the concept and original implementation goes to him.
 
 ---
 
-## 🧠 Technique Overview
+## Technique Overview
 
 Normally, the Windows API function `QueueUserAPC` only allows queuing APCs with a **single argument**, which limits its usefulness for tasks like arbitrary memory writing. Internally, however, it calls the undocumented function `NtQueueApcThread`, which supports **three arguments** for the callback.
 
@@ -30,7 +30,7 @@ Raigeki is a simple proof-of-concept shellcode loader that:
 
 - Reads shellcode from a binary file.
 - Allocates memory with `VirtualAlloc`.
-- Uses the custom `writeprocessmemoryapc` function to write the shellcode into memory, byte-by-byte via `RtlFillMemory`.
+- Uses the custom `WriteProcessMemoryAPC` function to write the shellcode into memory, byte-by-byte via `RtlFillMemory`.
 - Changes memory protection to `PAGE_EXECUTE_READWRITE`.
 - Creates a local thread to execute the shellcode.
 
