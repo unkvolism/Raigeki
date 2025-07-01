@@ -20,6 +20,7 @@ const NT_CREATE_THREAD_EX_ALL_ACCESS: u32 = 0x1F0FFF;
 
 type RtlFillMemoryFn = unsafe extern "system" fn(*mut core::ffi::c_void, usize, u8);
 
+// due to multiple issues with using RtlFillMemory from the phnt crate, so i opted to resolve it dynamically via kernel32.dll
 fn get_rtl_fill_memory() -> Option<RtlFillMemoryFn> {
     unsafe {
         let kernel32 = GetModuleHandleA(PCSTR("kernel32.dll\0".as_ptr()));
@@ -31,6 +32,7 @@ fn get_rtl_fill_memory() -> Option<RtlFillMemoryFn> {
     }
 }
 
+//function to serve like a thread entry point
 unsafe extern "system" fn thread_start(_parameter: *mut core::ffi::c_void) -> u32 {
     0
 }
@@ -61,7 +63,7 @@ fn writeprocessmemoryapc(h_process: HANDLE, p_address: *mut u8, p_data: *const u
         );
 
         if create_result != 0 {
-            println!("[-] NtCreateThreadEx failed with status: {:#x}", create_result);
+            println!("NtCreateThreadEx failed with status: {:#x}", create_result);
             return create_result;
         }
 
@@ -76,7 +78,7 @@ fn writeprocessmemoryapc(h_process: HANDLE, p_address: *mut u8, p_data: *const u
             );
 
             if result != 0 {
-                println!("[-] NtQueueApcThread failed at offset {} with status: {:#x}", i, result);
+                println!(" NtQueueApcThread failed at offset {} with status: {:#x}", i, result);
                 TerminateThread(WIN32_HANDLE(h_thread), 0).expect("Failed to terminate thread");
                 CloseHandle(WIN32_HANDLE(h_thread)).expect("Failed to close thread handle");
                 return result;
@@ -91,7 +93,7 @@ fn writeprocessmemoryapc(h_process: HANDLE, p_address: *mut u8, p_data: *const u
         let written_data = std::slice::from_raw_parts(p_address, dw_length);
         let original_data = std::slice::from_raw_parts(p_data, dw_length);
         if written_data != original_data {
-            println!("[-] Memory verification failed - written data doesn't match original");
+            println!("Memory verification failed - written data doesn't match original");
             return 0xC0000005u32 as i32; // 
         }
 
@@ -127,7 +129,7 @@ fn main() {
         );
 
         if mem_addr.is_null() {
-            println!("[-] VirtualAlloc failed with error {}", GetLastError().0);
+            println!("VirtualAlloc failed with error {}", GetLastError().0);
             exit(1);
         }
 
