@@ -40,3 +40,16 @@ Raigeki is a simple proof-of-concept shellcode loader that:
 
 ---
 
+
+## Build Instructions
+
+```bash
+# Clone the repository
+git clone https://github.com/unkvolism/raigeki.git
+cd raigeki
+
+# Build in release mode
+cargo build --release
+
+# Run with the path to your shellcode binary
+cargo run --release -- ./shellcode.bin
